@@ -1,5 +1,7 @@
-# Cordova support is retired in App Center
-Check our [blog post](https://devblogs.microsoft.com/appcenter/announcing-apache-cordova-retirement/) for more information.
+# CodePush Lives On
+Microsoft has removed Cordova and React support for CodePush. See their [blog post](https://devblogs.microsoft.com/appcenter/announcing-apache-cordova-retirement/) for more information.
+
+Instead, you can host your own [code-push-server](https://github.com/byronigoe/code-push-server).
 
 # Apache Cordova Plugin for CodePush
 
@@ -53,23 +55,17 @@ cordova platform update android
 cordova platform update ios
 ```
 
-## Deprecating old versions
-
-Since CodePush is migrating to a new service all versions of cordova-plugin-code-push lower than **[1.12.0](https://github.com/microsoft/cordova-plugin-code-push/releases/tag/v1.12.0)** will not work in the nearest future.
-
-You can find more information in our [documentation](https://github.com/microsoft/code-push/blob/master/migration-notice.md).
-
 ## Getting Started
 
 Once you've followed the general-purpose ["getting started"](https://docs.microsoft.com/en-us/appcenter/distribution/codepush/) instructions for setting up your CodePush account, you can start CodePush-ifying your Cordova app by running the following command from within your app's root directory:
 
 ```shell
-cordova plugin add cordova-plugin-code-push@latest
+cordova plugin add https://github.com/byronigoe/cordova-plugin-code-push@latest
 ```
 
 With the CodePush plugin installed, configure your app to use it via the following steps:
 
-1. Add your deployment keys to the `config.xml` file, making sure to include the right key for each Cordova platform:
+1. Add your deployment keys to the `config.xml` file, making sure to include the right key for each Cordova platform. Also add your code-push-server URL:
 
     ```xml
     <platform name="android">
@@ -78,6 +74,7 @@ With the CodePush plugin installed, configure your app to use it via the followi
     <platform name="ios">
         <preference name="CodePushDeploymentKey" value="YOUR-IOS-DEPLOYMENT-KEY" />
     </platform>
+    <preference name="CodePushServerUrl" value="https://your-server.com/" />
     ```
 
     As a reminder, these keys are generated for you when you created your CodePush app via the CLI. If you need to retrieve them, you can simply run `appcenter codepush deployment list <ownerName>/<appName> --displayKeys`, and grab the key for the specific deployment you want to use (e.g. `Staging`, `Production`).
@@ -98,18 +95,16 @@ With the CodePush plugin installed, configure your app to use it via the followi
     ```
     You can use the same private/public key pair for each platform.
 
-2. If you're using an `<access origin="*" />` element in your `config.xml` file, then your app is already allowed to communicate with the CodePush servers and you can safely skip this step. Otherwise, add the following additional `<access />` elements:
+2. If you're using an `<access origin="*" />` element in your `config.xml` file, then your app is already allowed to communicate with your CodePush server and you can safely skip this step. Otherwise, add the following additional `<access />` elements:
 
     ```xml
-    <access origin="https://codepush.appcenter.ms" />
-    <access origin="https://codepush.blob.core.windows.net" />
-    <access origin="https://codepushupdates.azureedge.net" />
+    <access origin="https://your-server.com/" />
     ```
 
-3. To ensure that your app can access the CodePush server on [CSP](https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy)-compliant platforms, add `https://codepush.appcenter.ms` to the `Content-Security-Policy` `meta` tag in your `index.html` file:
+3. To ensure that your app can access the CodePush server on [CSP](https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy)-compliant platforms, add `https://your-server.com/` to the `Content-Security-Policy` `meta` tag in your `index.html` file:
 
     ```xml
-    <meta http-equiv="Content-Security-Policy" content="default-src https://codepush.appcenter.ms 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src https://your-server.com/ 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *" />
     ```
 
 4. Finally, double-check that you already have the [`cordova-plugin-whitelist`](https://github.com/apache/cordova-plugin-whitelist) plugin installed (most apps will). To check this, simply run the following command:
