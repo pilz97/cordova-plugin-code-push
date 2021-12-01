@@ -60,11 +60,13 @@ Windows       | Android
 
 ### Test descriptions
 
+Ensure you have ANDROID_SDK_ROOT set, the cordova CLI installed globally, and `adb` on your path.
+
 The tests first build the app.
 
 They then check if the required emulators are currently running.
 
-If an Android emulator is not running, it attempts to boot an Android emulator named `emulator`. You can specify an emulator by adding `--androidemu yourEmulatorNameHere` as a command line option to the gulp task.
+If an Android emulator is not running, it attempts to boot an Android emulator named `emulator` (so have $ANDROID_SDK_ROOT/emulator/ on your path). You can specify an emulator by adding `--androidemu yourEmulatorNameHere` as a command line option to the gulp task.
 
 If an iOS simulator is not running, it attempts to boot the latest iOS iPhone simulator. You can specify a simulator by adding `--iosemu yourSimulatorNameHere` as a command line option to the gulp task.
 
@@ -74,7 +76,7 @@ If you would like the tests to always restart the necessary emulators (killing t
 
 The desired unit tests are then run.
 
-If you would like to skip building, add a `-fast` to the end of the command you'd like to run. For example, `gulp test-ios` becomes `gulp test-ios-fast`.
+If you would like to skip compiling, add a `-fast` to the end of the command you'd like to run. For example, `gulp test-ios` becomes `gulp test-ios-fast`. To just run the tests again (and not setup the test folders again), run `gulp test-run-android`.
 
 There is a both a full unit test suite and a "core" set of unit tests that you may run. If you would like to run only the core tests, add a `--core` flag to the command.
 
