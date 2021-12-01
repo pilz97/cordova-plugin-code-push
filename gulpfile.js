@@ -39,6 +39,7 @@ function spawnCommand(command, args, callback, silent, detached) {
         options.stdio = ["ignore"];
     }
 
+		command = path.normalize(command);
     var process = child_process.spawn(command, args, options);
 
     process.stdout.on('data', function (data) {
@@ -59,6 +60,7 @@ function spawnCommand(command, args, callback, silent, detached) {
 };
 
 function execCommand(command, args, callback, silent) {
+		command = path.normalize(command);
     var process = child_process.exec(command + " " + args.join(" "));
 
     process.stdout.on('data', function (data) {
